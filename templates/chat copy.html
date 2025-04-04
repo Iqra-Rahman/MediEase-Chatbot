@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediEase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .chat-container {
+            width: 420px;
+            margin: 36px auto;
+            background-color: #019693;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+            position: fixed;
+            display: none;
+            bottom: 32px;
+            right: 96px;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #0A1931;
+        }
+
+        .chat-header h3 {
+            font-weight: 600;
+            color: #e7e6ff;
+            margin: 0;
+        }
+
+        #chat-window {
+            height: 350px;
+            overflow-y: auto;
+            padding: 6px;
+            background-color: #ffecec;
+            border-radius: -4px;
+            display: flex;
+            flex-direction: column;
+            margin: -20px;
+            margin-top: 5px;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            max-width: 75%;
+            margin: 8px;
+            padding: 12px;
+            border-radius: 15px;
+            word-wrap: break-word;
+            font-size: 14px;
+        }
+
+        .user {
+            background-color: #008e7b;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 3px;
+        }
+
+        .chatbot {
+            background-color: #baede6;
+            color: black;
+            align-self: flex-start;
+            border-bottom-left-radius: 3px;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-reply-btn {
+            background-color: white;
+            color: #01403a;
+            border: 1px solid #198b7f;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            width: max-content;
+            max-width: 90%;
+        }
+
+        .quick-reply-btn:hover {
+            background-color: #105857;
+            color: white;
+        }
+
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            background-color: #f4f6ff;
+            color: black;
+        }
+
+        #send-btn {
+            background-color: #35b6b4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            font-size: 18px;
+        }
+
+        #send-btn:hover {
+            background-color: #105857;
+        }
+
+        .chatbot-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #019693;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .chatbot-btn:hover {
+            background-color: #105857;
+        }
+
+        #appointments-table {
+            width: 705px;
+            margin: 20px auto;
+            background-color: #f4f6ff;
+            border-radius: 8px;
+            padding: 15px;
+            color: #0A1931;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            right: 270px;
+        }
+
+        #appointments-table h2 {
+            color: #019693;
+            text-align: center;
+        }
+
+        #appointments-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #appointments-table th,
+        #appointments-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        #appointments-table th {
+            background-color: #019693;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Appointments Table -->
+    <div id="appointments-table">
+        <h2>Appointments</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Message</th>
+                    <th>Doctor</th>
+                    <th>Department</th>
+                </tr>
+            </thead>
+            <tbody id="appointments-tbody">
+                <!-- Appointments will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Chatbot Floating Button -->
+    <button class="chatbot-btn" id="toggle-chat"><i class="fas fa-comments"></i></button>
+
+    <!-- Chat Container -->
+    <div class="chat-container" id="chat-container">
+        <div class="chat-header">
+            <div class="logo">
+                <h3>MediEase</h3>
+            </div>
+            <button id="reset-btn" class="btn btn-sm btn-light">Reset</button>
+        </div>
+        <div id="chat-window">
+            <!-- Chat messages will be appended here -->
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" class="form-control" placeholder="Type a message...">
+            <button type="button" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+        let thread_id = null;
+
+        // Function to refresh the appointments table
+        function refreshAppointments() {
+            $.ajax({
+                type: 'GET',
+                url: '/appointments',
+                success: function (data) {
+                    let tbody = $('#appointments-tbody');
+                    tbody.empty();
+                    data.appointments.forEach(function (app) {
+                        let row = `<tr>
+                    <td>${app.id}</td>
+                    <td>${app.name}</td>
+                    <td>${app.date}</td>
+                    <td>${app.time}</td>
+                    <td>${app.message}</td>
+                    <td>${app.department || 'Not assigned'}</td>
+                    <td>${app.doctor || 'Not assigned'}</td>
+                </tr>`;
+                        tbody.append(row);
+                    });
+                },
+                error: function () {
+                    console.log('Error fetching appointments');
+                }
+            });
+        }
+
+        // Handle user input
+        $('#send-btn').click(function () { sendMessage(); });
+        $('#user-input').keypress(function (e) { if (e.which == 13) sendMessage(); });
+
+        function sendMessage(text = null) {
+            let message = text || $('#user-input').val().trim();
+            if (message) {
+                $('#chat-window').append('<div class="message user">' + message + '</div>');
+                $('#user-input').val('');
+                $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+                sendToBackend(message);
+            }
+        }
+
+        function sendToBackend(message) {
+            let data = { message: message };
+            if (thread_id) {
+                data.thread_id = thread_id;
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/chat',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    thread_id = response.thread_id;
+                    showBotMessage(response.response);
+                    refreshAppointments();
+                },
+                error: function () {
+                    showBotMessage("⚠️ Something went wrong. Please try again.");
+                }
+            });
+        }
+
+        function showBotMessage(message) {
+            $('#chat-window').append('<div class="message chatbot">' + message + '</div>');
+            $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+        }
+
+        function showMainOptions() {
+            const quickReplies = $('<div class="quick-replies"></div>');
+            quickReplies.append('<button class="quick-reply-btn" data-value="I have a health concern" data-action="send">Health Inquiry</button>');
+            quickReplies.append('<button class="quick-reply-btn" data-value="I need hospital information" data-action="send">Hospital Inquiry</button>');
+            quickReplies.append('<button class="quick-reply-btn" data-action="show-appointment-options">Book, Cancel, or Reschedule Appointment</button>');
+            $('#chat-window').append(quickReplies);
+            $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+        }
+
+        function showAppointmentOptions() {
+            showBotMessage("Please select one of the below options");
+            const appointmentReplies = $('<div class="quick-replies"></div>');
+            appointmentReplies.append('<button class="quick-reply-btn" data-value="Book a new appointment" data-action="send">Book a new appointment</button>');
+            appointmentReplies.append('<button class="quick-reply-btn" data-value="Update an existing appointment" data-action="send">Update an existing appointment</button>');
+            appointmentReplies.append('<button class="quick-reply-btn" data-value="Cancel an appointment" data-action="send">Cancel an appointment</button>');
+            $('#chat-window').append(appointmentReplies);
+            $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+        }
+
+        // Reset conversation
+        $('#reset-btn').click(function () {
+            if (thread_id) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/reset',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ thread_id: thread_id }),
+                    success: function (data) {
+                        if (data.status === 'success') {
+                            thread_id = null;
+                            $('#chat-window').empty();
+                            showBotMessage("Conversation has been reset. How can I assist you today?");
+                            showMainOptions();
+                        } else {
+                            showBotMessage("Error resetting conversation.");
+                        }
+                    },
+                    error: function () {
+                        showBotMessage("⚠️ Error resetting conversation.");
+                    }
+                });
+            } else {
+                $('#chat-window').empty();
+                showBotMessage("Conversation has been reset. How can I assist you today?");
+                showMainOptions();
+            }
+        });
+
+        // Toggle chat window
+        $('#toggle-chat').click(function () { $('#chat-container').fadeToggle(); });
+
+        // Event delegation for quick reply buttons
+        $('#chat-window').on('click', '.quick-reply-btn', function () {
+            var action = $(this).data('action');
+            if (action === 'send') {
+                sendMessage($(this).data('value'));
+            } else if (action === 'show-appointment-options') {
+                showAppointmentOptions();
+            }
+        });
+
+        // Initialize chat window
+        showBotMessage("👋 Hi! I'm your AI medical assistant. How can I assist you today?");
+        showMainOptions();
+
+        // Refresh appointments on page load
+        refreshAppointments();
+    </script>
+</body>
+
+</html>

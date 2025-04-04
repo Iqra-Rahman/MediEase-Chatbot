@@ -1,0 +1,11 @@
+flask
+langchain
+langchain-groq
+langchain-community
+google-auth-oauthlib
+google-api-python-client
+python-dotenv
+pymupdf
+sqlite3
+tavily-python
+langgraph

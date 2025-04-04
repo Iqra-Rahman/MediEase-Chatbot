@@ -7,6 +7,7 @@
     <title>MediEase</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         body {
             background-color: #ffffff;
@@ -24,6 +25,7 @@
             position: fixed;
             display: none;
             right: 84px;
+            bottom: 156px;
         }
 
         .chat-header {
@@ -193,6 +195,15 @@
             background-color: #019693;
             color: white;
         }
+
+        .date-picker-container {
+            margin: 10px 0;
+        }
+
+        .form-control {
+            width: 148px;
+            padding: 5px;
+        }
     </style>
 </head>
 
@@ -244,6 +255,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         // Function to refresh the appointments table
         function refreshAppointments() {
@@ -272,7 +284,6 @@
                 id: null
             }
         };
-
         // Handling user input
         $('#send-btn').click(sendMessage);
         $('#user-input').keypress(function (e) { if (e.which == 13) sendMessage(); });
@@ -363,58 +374,77 @@
         }
 
         function processBookingFlow(message) {
-        switch (currentState.step) {
-            case "ask_name":
-                currentState.appointmentData.name = message;
-                currentState.step = "ask_symptoms";
-                showBotMessage("Thank you, " + message + ". Please describe your symptoms so we can assign you to the correct department.");
-                break;
-            case "ask_symptoms":
-                currentState.appointmentData.symptoms = message;
-                currentState.step = "ask_date";
-                showBotMessage("What date would you prefer? (e.g., MM/DD/YYYY)");
-                break;
-            case "ask_date":
-                currentState.appointmentData.preferredDate = message;
-                currentState.step = "ask_time";
-                showBotMessage("What time works best? (e.g., 9:00 AM)");
-                break;
-            case "ask_time":
-                currentState.appointmentData.preferredTime = message;
-                $.ajax({
-                    type: 'POST',
-                    url: '/book',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        patient_name: currentState.appointmentData.name,
-                        appointment_date: currentState.appointmentData.preferredDate,
-                        appointment_time: currentState.appointmentData.preferredTime,
-                        symptoms: currentState.appointmentData.symptoms
-                    }),
-                    success: function (data) {
-                        if (data.status === 'success') {
-                            showBotMessage(`Your appointment is booked!<br>
-                                <b>Name:</b> ${currentState.appointmentData.name}<br>
-                                <b>Date:</b> ${currentState.appointmentData.preferredDate}<br>
-                                <b>Time:</b> ${currentState.appointmentData.preferredTime}<br>
-                                <b>Department:</b> ${data.department}<br>
-                                <b>ID:</b> ${data.appointment_id}<br>
-                                Keep this ID for future reference.`);
-                            refreshAppointments();
-                        } else {
-                            showBotMessage("Error: " + data.message);
+            switch (currentState.step) {
+                case "ask_name":
+                    currentState.appointmentData.name = message;
+                    currentState.step = "ask_symptoms";
+                    showBotMessage("Thank you, " + message + ". Please describe your symptoms so we can assign you to the correct department.");
+                    break;
+                case "ask_symptoms":
+                    currentState.appointmentData.symptoms = message;
+                    currentState.step = "ask_date";
+                    showBotMessage("Please select your preferred date from the calendar below.");
+                    showDatePicker(); // Call the new date picker function
+                    break;
+                case "ask_date":
+                    // This case is now handled by the date picker’s onChange event
+                    break;
+                case "ask_time":
+                    currentState.appointmentData.preferredTime = message;
+                    $.ajax({
+                        type: 'POST',
+                        url: '/book',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            patient_name: currentState.appointmentData.name,
+                            appointment_date: currentState.appointmentData.preferredDate,
+                            appointment_time: currentState.appointmentData.preferredTime,
+                            symptoms: currentState.appointmentData.symptoms
+                        }),
+                        success: function (data) {
+                            if (data.status === 'success') {
+                                showBotMessage(`Your appointment is booked!<br>
+                                    <b>Name:</b> ${currentState.appointmentData.name}<br>
+                                    <b>Date:</b> ${currentState.appointmentData.preferredDate}<br>
+                                    <b>Time:</b> ${currentState.appointmentData.preferredTime}<br>
+                                    <b>Department:</b> ${data.department}<br>
+                                    <b>ID:</b> ${data.appointment_id}<br>
+                                    Keep this ID for future reference.`);
+                                refreshAppointments();
+                            } else {
+                                showBotMessage("Error: " + data.message);
+                            }
+                            resetFlow();
+                            showMainOptions();
+                        },
+                        error: function () {
+                            showBotMessage("⚠️ Booking failed. Please try again.");
+                            resetFlow();
                         }
-                        resetFlow();
-                        showMainOptions();
-                    },
-                    error: function () {
-                        showBotMessage("⚠️ Booking failed. Please try again.");
-                        resetFlow();
-                    }
-                });
-                break;
+                    });
+                    break;
+            }
         }
-    }
+
+        function showDatePicker() {
+            const datePickerContainer = $('<div class="date-picker-container"></div>');
+            const dateInput = $('<input type="text" class="form-control" placeholder="Click to select date">');
+            datePickerContainer.append(dateInput);
+            $('#chat-window').append(datePickerContainer);
+
+            flatpickr(dateInput, {
+                dateFormat: "m/d/Y", // Matches your expected format (MM/DD/YYYY)
+                minDate: "today", // Prevents selecting past dates
+                onChange: function (selectedDates, dateStr) {
+                    currentState.appointmentData.preferredDate = dateStr;
+                    currentState.step = "ask_time";
+                    showBotMessage("You selected " + dateStr + ". What time works best? (e.g., 9:00 AM)");
+                    datePickerContainer.remove(); // Remove the picker after selection
+                }
+            });
+
+            $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+        }
 
         function processCancelFlow(message) {
             if (currentState.step === "ask_id") {
@@ -442,17 +472,18 @@
         function processRescheduleFlow(message) {
             switch (currentState.step) {
                 case "ask_id":
+                    // Store the appointment ID provided by the user
                     currentState.appointmentData.id = message;
+                    // Move to the date selection step
                     currentState.step = "ask_date";
-                    showBotMessage("What new date would you prefer? (e.g., MM/DD/YYYY)");
-                    break;
-                case "ask_date":
-                    currentState.appointmentData.preferredDate = message;
-                    currentState.step = "ask_time";
-                    showBotMessage("What new time works best? (e.g., 9:00 AM)");
+                    // Prompt the user and show the date picker
+                    showBotMessage("Please select the new date from the calendar below.");
+                    showDatePicker();
                     break;
                 case "ask_time":
+                    // Store the preferred time provided by the user
                     currentState.appointmentData.preferredTime = message;
+                    // Send the reschedule request to the server
                     $.ajax({
                         type: 'POST',
                         url: '/reschedule/' + currentState.appointmentData.id,
@@ -464,7 +495,7 @@
                         success: function (data) {
                             if (data.status === 'success') {
                                 showBotMessage(`Appointment (ID: ${currentState.appointmentData.id}) rescheduled to ${currentState.appointmentData.preferredDate} at ${currentState.appointmentData.preferredTime}.`);
-                                refreshAppointments(); 
+                                refreshAppointments();
                             } else {
                                 showBotMessage("Error: " + data.message);
                             }

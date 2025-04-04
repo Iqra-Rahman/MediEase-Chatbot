@@ -1,0 +1,115 @@
+{
+    "hospital": {
+      "name": "Sunrise Medical Center",
+      "address": "123 Health St, Wellness City, HC 45678",
+      "contact": {
+        "phone": "(555) 123-4567",
+        "email": "info@sunrisemedical.com",
+        "website": "www.sunrisemedical.com"
+      },
+      "operating_hours": {
+        "monday_saturday": "8 AM – 8 PM",
+        "emergency": "24/7"
+      },
+      "emergency_contact": "(555) 987-6543",
+      "services_offered": [
+        "Routine Check-ups",
+        "Emergency Care",
+        "Specialist Consultations",
+        "Diagnostic Tests",
+        "Surgeries",
+        "Maternity Care",
+        "Home Healthcare"
+      ]
+    },
+    "departments": [
+      "General Medicine",
+      "Pediatrics",
+      "Cardiology",
+      "Neurology",
+      "Orthopedics",
+      "Dermatology",
+      "Gastroenterology",
+      "Oncology",
+      "Nephrology",
+      "Endocrinology",
+      "ENT",
+      "Urology",
+      "Pulmonology",
+      "Psychiatry & Psychology",
+      "Ophthalmology",
+      "General Surgery",
+      "Gynecology & Obstetrics",
+      "Radiology",
+      "Emergency Medicine",
+      "Physiotherapy & Rehabilitation",
+      "Dental Care",
+      "Neonatology",
+      "Plastic Surgery",
+      "Sports Medicine",
+      "Rheumatology",
+      "Hematology",
+      "Pain Management",
+      "Allergy & Immunology",
+      "Sleep Medicine",
+      "Home Healthcare Services"
+    ],
+    "doctors": [
+      { "name": "Dr. Rajesh Verma", "specialty": "Cardiologist", "experience": "15+ years", "fee": "₹1800" },
+      { "name": "Dr. Priya Sharma", "specialty": "Neurologist", "experience": "10+ years", "fee": "₹1500" },
+      { "name": "Dr. Anil Kapoor", "specialty": "Oncologist", "experience": "20+ years", "fee": "₹2000" },
+      { "name": "Dr. Meera Khanna", "specialty": "Pediatrician", "experience": "12+ years", "fee": "₹1200" },
+      { "name": "Dr. Rohan Bhatia", "specialty": "Orthopedic Surgeon", "experience": "18+ years", "fee": "₹1700" },
+      { "name": "Dr. Kavita Iyer", "specialty": "Gastroenterologist", "experience": "14+ years", "fee": "₹1600" },
+      { "name": "Dr. Arjun Nair", "specialty": "Dermatologist", "experience": "10+ years", "fee": "₹1300" },
+      { "name": "Dr. Sunita Desai", "specialty": "Nephrologist", "experience": "17+ years", "fee": "₹1800" },
+      { "name": "Dr. Vikram Sen", "specialty": "ENT Specialist", "experience": "13+ years", "fee": "₹1400" },
+      { "name": "Dr. Preeti Choudhary", "specialty": "Pulmonologist", "experience": "11+ years", "fee": "₹1450" },
+      { "name": "Dr. Ajay Malhotra", "specialty": "Endocrinologist", "experience": "16+ years", "fee": "₹1700" },
+      { "name": "Dr. Ishaan Bose", "specialty": "Urologist", "experience": "12+ years", "fee": "₹1550" },
+      { "name": "Dr. Neha Tripathi", "specialty": "Psychiatrist", "experience": "9+ years", "fee": "₹1350" },
+      { "name": "Dr. Devansh Rao", "specialty": "Ophthalmologist", "experience": "15+ years", "fee": "₹1400" },
+      { "name": "Dr. Radhika Menon", "specialty": "General Surgeon", "experience": "18+ years", "fee": "₹1600" },
+      { "name": "Dr. Sanjay Dubey", "specialty": "Gynecologist", "experience": "20+ years", "fee": "₹2000" },
+      { "name": "Dr. Varun Kapoor", "specialty": "Radiologist", "experience": "14+ years", "fee": "₹1500" },
+      { "name": "Dr. Sneha Sinha", "specialty": "Emergency Medicine Specialist", "experience": "12+ years", "fee": "₹1450" },
+      { "name": "Dr. Piyush Agarwal", "specialty": "Physiotherapist", "experience": "8+ years", "fee": "₹1100" },
+      { "name": "Dr. Ananya Deshmukh", "specialty": "Dental Surgeon", "experience": "10+ years", "fee": "₹1300" }
+    ],
+    "common_symptoms": {
+      "General Medicine": ["Fever", "Fatigue", "Body aches", "Headache", "Nausea", "Dizziness", "Weakness"],
+      "Pediatrics": ["Poor weight gain", "Frequent infections", "Delayed milestones", "Excessive crying", "High fever"],
+      "Cardiology": ["Chest pain", "Shortness of breath", "Palpitations", "Dizziness", "Swelling in legs", "High blood pressure"],
+      "Neurology": ["Seizures", "Memory loss", "Numbness", "Muscle weakness", "Migraines", "Speech problems"],
+      "Orthopedics": ["Joint pain", "Swelling", "Back pain", "Stiffness", "Muscle cramps", "Limited mobility"],
+      "Dermatology": ["Skin rashes", "Itching", "Acne", "Dry skin", "Discoloration", "Hair loss", "Eczema"],
+      "Gastroenterology": ["Stomach pain", "Acid reflux", "Nausea", "Diarrhea", "Constipation", "Bloating"],
+      "Oncology": ["Unexplained weight loss", "Fatigue", "Lumps", "Chronic pain", "Night sweats", "Unusual bleeding"],
+      "Nephrology": ["Swelling in legs or face", "Decreased urine output", "High blood pressure", "Foamy/bloody urine"],
+      "Endocrinology": ["Unexplained weight changes", "Excessive thirst", "Frequent urination", "Fatigue", "Mood swings"],
+      "ENT": ["Ear pain", "Hearing loss", "Nasal congestion", "Sore throat", "Dizziness", "Snoring"],
+      "Urology": ["Painful urination", "Frequent urination", "Blood in urine", "Erectile dysfunction", "Kidney stones"],
+      "Pulmonology": ["Chronic cough", "Shortness of breath", "Wheezing", "Chest pain", "Coughing up blood"],
+      "Psychiatry & Psychology": ["Anxiety", "Depression", "Mood swings", "Hallucinations", "Sleep disturbances"],
+      "Ophthalmology": ["Blurred vision", "Red eyes", "Eye pain", "Sensitivity to light", "Floaters"],
+      "General Surgery": ["Severe abdominal pain", "Hernia", "Unhealing wounds", "Chronic infections"],
+      "Gynecology & Obstetrics": ["Irregular periods", "Pelvic pain", "Vaginal discharge", "Pregnancy symptoms"],
+      "Pain Management": ["Chronic back pain", "Joint pain", "Nerve pain", "Migraines"]
+    },
+    "appointment": {
+      "booking_modes": ["Chatbot", "Hospital Website"],
+      "consultation_modes": ["In-Person", "Video Consultation"],
+      "documents_needed": ["ID Proof", "Medical Reports (if applicable)"],
+      "payment_options": ["UPI", "Credit/Debit Cards", "Net Banking"],
+      "rescheduling_policy": "Allowed up to 24 hours before appointment",
+      "cancellation_policy": {
+        "before_24_hours": "Full refund",
+        "within_24_hours": "50% refund",
+        "no_show": "No refund"
+      }
+    },
+    "emergency_services": {
+      "availability": "24/7",
+      "ambulance_contact": "(555) 777-8888"
+    }
+  }  

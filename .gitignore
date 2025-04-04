@@ -1,3 +1,6 @@
 __pycache__/
 .env
 Sunrise Medical Center - AI-Powered Chatbot & Hospital Information.pdf
+token.pickle
+appointments.db
+credentials.json
