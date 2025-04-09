@@ -27,7 +27,7 @@ from langchain_core.runnables import RunnableConfig
 
 load_dotenv()
 
-# Load PDF data
+# Load PDF's data
 def load_pdf_data(pdf_path):
     try:
         doc = fitz.open(pdf_path)
